@@ -1,0 +1,49 @@
+type: solarcharger
+discovery: "victron/N/{vrm_id}/solarcharger/+/ProductName"
+instance_id: charge_id
+
+setup:
+  - topic: "victron/N/{vrm_id}/solarcharger/{charge_id}/ProductName"
+    store: prod_name
+
+device_info:
+  identifiers: ["solar_charger_{charge_id}"]
+  name: "Victron Solar Charger [{charge_id}]"
+  manufacturer: "Victron"
+  model: "{prod_name}"
+
+entities:
+  - name: "PV Voltage"
+    entity_id: "solar_charger_{charge_id}_pv_voltage"
+    topic: "victron/N/{vrm_id}/solarcharger/{charge_id}/Pv/V"
+    device_class: voltage
+    unit_of_measurement: "V"
+    icon: "mdi:flash-triangle"
+
+  - name: "PV Power"
+    entity_id: "solar_charger_{charge_id}_pv_power"
+    topic: "victron/N/{vrm_id}/solarcharger/{charge_id}/Yield/Power"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:lightning-bolt"
+
+  - name: "DC Voltage"
+    entity_id: "solar_charger_{charge_id}_dc_voltage"
+    topic: "victron/N/{vrm_id}/solarcharger/{charge_id}/Dc/0/Voltage"
+    device_class: voltage
+    unit_of_measurement: "V"
+    icon: "mdi:flash-triangle"
+
+  - name: "DC Current"
+    entity_id: "solar_charger_{charge_id}_dc_current"
+    topic: "victron/N/{vrm_id}/solarcharger/{charge_id}/Dc/0/Current"
+    device_class: current
+    unit_of_measurement: "A"
+    icon: "mdi:current-dc"
+
+  - name: "Yield Today"
+    entity_id: "solar_charger_{charge_id}_yield_today"
+    topic: "victron/N/{vrm_id}/solarcharger/{charge_id}/History/Daily/0/Yield"
+    device_class: energy
+    unit_of_measurement: "kWh"
+    icon: "mdi:solar-power"

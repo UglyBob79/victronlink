@@ -1,0 +1,119 @@
+type: system
+instance_id: system_id
+
+device_info:
+  identifiers: ["system_{vrm_id}"]
+  name: "Victron System [{vrm_id}]"
+  manufacturer: "Victron"
+  model: "Cerbo GX"
+
+entities:
+  - name: "L1 Consumption"
+    entity_id: "system_{vrm_id}_l1_consumption"
+    topic: "victron/N/{vrm_id}/system/0/Ac/Consumption/L1/Power"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:lightning-bolt"
+
+  - name: "L2 Consumption"
+    entity_id: "system_{vrm_id}_l2_consumption"
+    topic: "victron/N/{vrm_id}/system/0/Ac/Consumption/L2/Power"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:lightning-bolt"
+
+  - name: "L3 Consumption"
+    entity_id: "system_{vrm_id}_l3_consumption"
+    topic: "victron/N/{vrm_id}/system/0/Ac/Consumption/L3/Power"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:lightning-bolt"
+
+  - name: "L1 Grid Power"
+    entity_id: "system_{vrm_id}_l1_grid_power"
+    topic: "victron/N/{vrm_id}/system/0/Ac/Grid/L1/Power"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:lightning-bolt"
+
+  - name: "L2 Grid Power"
+    entity_id: "system_{vrm_id}_l2_grid_power"
+    topic: "victron/N/{vrm_id}/system/0/Ac/Grid/L2/Power"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:lightning-bolt"
+
+  - name: "L3 Grid Power"
+    entity_id: "system_{vrm_id}_l3_grid_power"
+    topic: "victron/N/{vrm_id}/system/0/Ac/Grid/L3/Power"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:lightning-bolt"
+
+  ##############################################
+  # PHASE IMPORT (positive values only)
+  ##############################################
+
+  - name: "L1 Grid Import"
+    entity_id: "system_{vrm_id}_l1_grid_import"
+    topic: "victron/N/{vrm_id}/system/0/Ac/Grid/L1/Power"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:transmission-tower-import"
+    value_template: |
+      {% set v = value_json.value | float %}
+      {{ max(v, 0) }}
+
+  - name: "L2 Grid Import"
+    entity_id: "system_{vrm_id}_l2_grid_import"
+    topic: "victron/N/{vrm_id}/system/0/Ac/Grid/L2/Power"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:transmission-tower-import"
+    value_template: |
+      {% set v = value_json.value | float %}
+      {{ max(v, 0) }}
+
+  - name: "L3 Grid Import"
+    entity_id: "system_{vrm_id}_l3_grid_import"
+    topic: "victron/N/{vrm_id}/system/0/Ac/Grid/L3/Power"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:transmission-tower-import"
+    value_template: |
+      {% set v = value_json.value | float %}
+      {{ max(v, 0) }}
+
+  ##############################################
+  # PHASE EXPORT (negative values only → positive)
+  ##############################################
+
+  - name: "L1 Grid Export"
+    entity_id: "system_{vrm_id}_l1_grid_export"
+    topic: "victron/N/{vrm_id}/system/0/Ac/Grid/L1/Power"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:transmission-tower-export"
+    value_template: |
+      {% set v = value_json.value | float %}
+      {{ max(-v, 0) }}
+
+  - name: "L2 Grid Export"
+    entity_id: "system_{vrm_id}_l2_grid_export"
+    topic: "victron/N/{vrm_id}/system/0/Ac/Grid/L2/Power"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:transmission-tower-export"
+    value_template: |
+      {% set v = value_json.value | float %}
+      {{ max(-v, 0) }}
+
+  - name: "L3 Grid Export"
+    entity_id: "system_{vrm_id}_l3_grid_export"
+    topic: "victron/N/{vrm_id}/system/0/Ac/Grid/L3/Power"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:transmission-tower-export"
+    value_template: |
+      {% set v = value_json.value | float %}
+      {{ max(-v, 0) }}

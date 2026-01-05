@@ -1,0 +1,110 @@
+type: inverter
+discovery: "victron/N/{vrm_id}/vebus/+/ProductName"
+instance_id: inverter_id
+
+setup:
+  - topic: "victron/N/{vrm_id}/vebus/{inverter_id}/ProductName"
+    store: prod_name
+
+device_info:
+  identifiers: ["inverter_{inverter_id}"]
+  name: "Victron Inverter [{inverter_id}]"
+  manufacturer: "Victron"
+  model: "{prod_name}"
+
+entities:
+  - name: "Inverter State"
+    entity_id: "inverter_{inverter_id}_state"
+    topic: "victron/N/{vrm_id}/vebus/{inverter_id}/State"
+    device_class: null
+    unit_of_measurement: null
+    icon: "mdi:state-machine"
+    value_template: |
+      {% set states = {
+        0: "Off",
+        1: "Low Power",
+        2: "Fault",
+        3: "Bulk",
+        4: "Absorption",
+        5: "Float",
+        6: "Storage",
+        7: "Equalize",
+        8: "Passthrough",
+        9: "Inverting",
+        10: "Power Assist",
+        11: "Power Supply",
+        244: "Sustain",
+        252: "External Control"
+      } %}
+      {{ states.get(value_json.value, "Error - No Data") }}
+
+  - name: "L1 Voltage"
+    entity_id: "inverter_{inverter_id}_l1_voltage"
+    topic: "victron/N/{vrm_id}/vebus/{inverter_id}/Ac/Out/L1/V"
+    device_class: voltage
+    unit_of_measurement: "V"
+    icon: "mdi:flash-triangle"
+
+  - name: "L1 Current"
+    entity_id: "inverter_{inverter_id}_l1_current"
+    topic: "victron/N/{vrm_id}/vebus/{inverter_id}/Ac/Out/L1/I"
+    device_class: current
+    unit_of_measurement: "A"
+    icon: "mdi:current-dc"
+
+  - name: "L1 Power"
+    entity_id: "inverter_{inverter_id}_l1_power"
+    topic: "victron/N/{vrm_id}/vebus/{inverter_id}/Ac/Out/L1/P"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:lightning-bolt"
+
+  - name: "L2 Voltage"
+    entity_id: "inverter_{inverter_id}_l2_voltage"
+    topic: "victron/N/{vrm_id}/vebus/{inverter_id}/Ac/Out/L2/V"
+    device_class: voltage
+    unit_of_measurement: "V"
+    icon: "mdi:flash-triangle"
+
+  - name: "L2 Current"
+    entity_id: "inverter_{inverter_id}_l2_current"
+    topic: "victron/N/{vrm_id}/vebus/{inverter_id}/Ac/Out/L2/I"
+    device_class: current
+    unit_of_measurement: "A"
+    icon: "mdi:current-dc"
+
+  - name: "L2 Power"
+    entity_id: "inverter_{inverter_id}_l2_power"
+    topic: "victron/N/{vrm_id}/vebus/{inverter_id}/Ac/Out/L2/P"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:lightning-bolt"
+
+  - name: "L3 Voltage"
+    entity_id: "inverter_{inverter_id}_l3_voltage"
+    topic: "victron/N/{vrm_id}/vebus/{inverter_id}/Ac/Out/L3/V"
+    device_class: voltage
+    unit_of_measurement: "V"
+    icon: "mdi:flash-triangle"
+
+  - name: "L3 Current"
+    entity_id: "inverter_{inverter_id}_l3_current"
+    topic: "victron/N/{vrm_id}/vebus/{inverter_id}/Ac/Out/L3/I"
+    device_class: current
+    unit_of_measurement: "A"
+    icon: "mdi:current-dc"
+
+  - name: "L3 Power"
+    entity_id: "inverter_{inverter_id}_l3_power"
+    topic: "victron/N/{vrm_id}/vebus/{inverter_id}/Ac/Out/L3/P"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Grid Lost"
+    entity_id: "inverter_{inverter_id}_grid_lost"
+    topic: "victron/N/{vrm_id}/vebus/{inverter_id}/Alarms/GridLost"
+    device_class: problem
+    icon: "mdi:transmission-tower-off"
+    component: binary_sensor
+    value_template: "{{ 'ON' if value_json.value == 1 else 'OFF' }}"

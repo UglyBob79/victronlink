@@ -1,0 +1,98 @@
+type: battery
+discovery: "victron/N/{vrm_id}/battery/+/ProductName"
+instance_id: "batt_id"
+
+setup:
+  - topic: "victron/N/{vrm_id}/battery/{batt_id}/ProductName"
+    store: prod_name
+  - topic: "victron/N/{vrm_id}/battery/{batt_id}/Manufacturer"
+    store: manufacturer
+
+device_info:
+  identifiers: ["victron_battery_{batt_id}"]
+  name: "Victron Battery [{batt_id}]"
+  manufacturer: "{manufacturer}"
+  model: "{prod_name}"
+
+entities:
+  - name: "Battery Voltage"
+    entity_id: "battery_{batt_id}_voltage"
+    topic: "victron/N/{vrm_id}/battery/{batt_id}/Dc/0/Voltage"
+    device_class: "voltage"
+    unit_of_measurement: "V"
+    icon: "mdi:flash-triangle"
+
+  - name: "Battery Power"
+    entity_id: "battery_{batt_id}_power"
+    topic: "victron/N/{vrm_id}/battery/{batt_id}/Dc/0/Power"
+    device_class: "power"
+    unit_of_measurement: "W"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Battery Charge"
+    entity_id: "battery_{batt_id}_charge"
+    topic: "victron/N/{vrm_id}/battery/{batt_id}/Dc/0/Power"
+    device_class: "power"
+    unit_of_measurement: "W"
+    icon: "mdi:battery-charging"
+    value_template: |
+      {% set v = value_json.value | float %}
+      {{ max(v, 0) }}
+
+  - name: "Battery Discharge"
+    entity_id: "battery_{batt_id}_discharge"
+    topic: "victron/N/{vrm_id}/battery/{batt_id}/Dc/0/Power"
+    device_class: "power"
+    unit_of_measurement: "W"
+    icon: "mdi:battery-minus-variant"
+    value_template: |
+      {% set v = value_json.value | float %}
+      {{ max(-v, 0) }}
+
+  - name: "Battery Percentage"
+    entity_id: "battery_{batt_id}_percentage"
+    topic: "victron/N/{vrm_id}/battery/{batt_id}/Soc"
+    device_class: "battery"
+    unit_of_measurement: "%"
+    icon: "mdi:battery"
+
+  - name: "Battery Time to Go"
+    entity_id: "battery_{batt_id}_time_to_go"
+    topic: "victron/N/{vrm_id}/system/0/Dc/Battery/TimeToGo"
+    device_class: null
+    unit_of_measurement: null
+    icon: "mdi:timer"
+    value_template: |
+      {% if value_json.value is none %}
+          N/A
+      {% else %}
+          {% set total_seconds = value_json.value | int %}
+          {% set days = (total_seconds // 86400) %}
+          {% set hours = (total_seconds % 86400) // 3600 %}
+          {% set minutes = (total_seconds % 3600) // 60 %}
+          {% if days > 0 %}{{ days }}d {% endif %}
+          {% if hours > 0 or days > 0 %}{{ hours }}h {% endif %}
+          {{ minutes }}m
+      {% endif %}
+
+  - name: "Battery Temperature"
+    entity_id: "battery_{batt_id}_temperature"
+    topic: "victron/N/{vrm_id}/battery/{batt_id}/Dc/0/Temperature"
+    device_class: "temperature"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"
+    value_template: "{{ value_json.value }}"
+
+  - name: "ProductName"
+    entity_id: "battery_{batt_id}_product_name"
+    topic: "victron/N/{vrm_id}/battery/{batt_id}/ProductName"
+    device_class: null
+    icon: "mdi:devices"
+    value_template: "{{ value_json.value }}"
+
+  - name: "Manufacturer"
+    entity_id: "battery_{batt_id}_manufacturer"
+    topic: "victron/N/{vrm_id}/battery/{batt_id}/Manufacturer"
+    device_class: null
+    icon: "mdi:factory"
+    value_template: "{{ value_json.value }}"
