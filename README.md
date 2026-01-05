@@ -35,3 +35,27 @@ Clone the repository **directly into your AppDaemon `apps/` directory**:
 ```bash
 cd /path/to/appdaemon/apps
 git clone https://github.com/uglybob79/victronlink.git
+
+## Configuration
+
+VictronLink is configured via AppDaemon configuration (usually `apps.yaml`).
+
+---
+
+### Minimal configuration example
+
+Add the following to your **`apps.yaml`**:
+
+```yaml
+victronlink:
+  module: victronlink
+  class: VictronLink
+
+  # MQTT connection
+  mqtt_host: core-mosquitto
+  mqtt_port: 1883
+  mqtt_username: mqtt
+  mqtt_password: !secret mqtt_password
+
+  # Victron device identifier
+  device_id: abcd1234bcde
