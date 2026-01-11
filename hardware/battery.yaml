@@ -59,8 +59,6 @@ entities:
   - name: "Battery Time to Go"
     entity_id: "battery_{batt_id}_time_to_go"
     topic: "victron/N/{vrm_id}/system/0/Dc/Battery/TimeToGo"
-    device_class: null
-    unit_of_measurement: null
     icon: "mdi:timer"
     value_template: |
       {% if value_json.value is none %}
@@ -86,13 +84,11 @@ entities:
   - name: "ProductName"
     entity_id: "battery_{batt_id}_product_name"
     topic: "victron/N/{vrm_id}/battery/{batt_id}/ProductName"
-    device_class: null
     icon: "mdi:devices"
     value_template: "{{ value_json.value }}"
 
   - name: "Manufacturer"
     entity_id: "battery_{batt_id}_manufacturer"
     topic: "victron/N/{vrm_id}/battery/{batt_id}/Manufacturer"
-    device_class: null
     icon: "mdi:factory"
     value_template: "{{ value_json.value }}"
